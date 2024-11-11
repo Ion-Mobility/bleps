@@ -26,7 +26,7 @@ pub const GENERIC_ATTRIBUTE_UUID16: Uuid = Uuid::Uuid16(0x1801);
 
 /// The default value of MTU, which can be upgraded through negotiation
 /// with the client.
-pub const BASE_MTU: u16 = 23;
+pub const BASE_MTU: u16 = 256;
 
 #[cfg(feature = "mtu128")]
 pub const MTU: u16 = 128;
@@ -35,7 +35,7 @@ pub const MTU: u16 = 128;
 pub const MTU: u16 = 256;
 
 #[cfg(not(any(feature = "mtu128", feature = "mtu256")))]
-pub const MTU: u16 = 23;
+pub const MTU: u16 = 256;
 
 #[derive(Debug, PartialEq)]
 pub enum WorkResult {
