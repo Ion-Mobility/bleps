@@ -775,6 +775,17 @@ pub mod asynch {
             None
         }
 
+        pub async fn cmd_disconnect(&mut self, handle: u16, reason: u8) -> Result<EventType, Error>
+        where
+            Self: Sized,
+        {
+            self.write_bytes(Command::Disconnect { connection_handle: handle, reason }.encode().as_slice())
+                .await;
+            self.wait_for_command_complete(CONTROLLER_OGF, DISCONNECT_OCF)
+                .await?
+                .check_command_completed()
+        }
+
         pub(crate) async fn write_bytes(&mut self, bytes: &[u8]) {
             self.hci.borrow_mut().write(bytes).await.unwrap();
         }
