@@ -7,7 +7,7 @@ use command::{
     opcode, Command, INFORMATIONAL_OGF, LONG_TERM_KEY_REQUEST_REPLY_OCF, READ_BD_ADDR_OCF,
     SET_ADVERTISE_ENABLE_OCF, SET_ADVERTISING_DATA_OCF, SET_EVENT_MASK_OCF, SET_SCAN_RSP_DATA_OCF,
 };
-use command::{LE_OGF, SET_ADVERTISING_PARAMETERS_OCF};
+use command::{LE_OGF, SET_ADVERTISING_PARAMETERS_OCF, DISCONNECT_OCF};
 use embedded_io_blocking::{Read, Write};
 use event::EventType;
 
@@ -436,6 +436,15 @@ impl<'a> Ble<'a> {
         }
 
         None
+    }
+
+    pub fn cmd_disconnect(&mut self, handle: u16, reason: u8) -> Result<EventType, Error>
+    where
+        Self: Sized,
+    {
+        self.write_bytes(Command::Disconnect { connection_handle: handle, reason }.encode().as_slice());
+        self.wait_for_command_complete(CONTROLLER_OGF, DISCONNECT_OCF)?
+            .check_command_completed()
     }
 
     fn write_bytes(&mut self, bytes: &[u8]) {
